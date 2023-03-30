@@ -51,49 +51,44 @@ func (m *Module) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	repl := caddy.NewReplacer()
 
 	for d.Next() {
-		/*插件名后面的参数
-		if d.NextArg() {
-			m.AccessKey = repl.ReplaceAll(d.Val(), "")
-		}
-		if d.NextArg() {
-			m.SecretAccessKey = repl.ReplaceAll(d.Val(), "")
-		}
-		if d.NextArg() {
-			m.RegionID = repl.ReplaceAll(d.Val(), "")
-		}
-		if d.NextArg() {
-			m.EndPoint = repl.ReplaceAll(d.Val(), "")
-		}
-		if d.NextArg() {
-			m.ZoneId = repl.ReplaceAll(d.Val(), "")
-		}
+		//插件名后面的参数
 		if d.NextArg() {
 			return d.ArgErr()
-		}*/
+		}
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
 			case "access_key":
-				m.AccessKey = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					m.AccessKey = repl.ReplaceAll(d.Val(), "")
+				}
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "secret_access_key":
-				m.SecretAccessKey = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					m.SecretAccessKey = repl.ReplaceAll(d.Val(), "")
+				}
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "region_id":
-				m.RegionID = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					m.RegionID = repl.ReplaceAll(d.Val(), "")
+				}
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "end_point":
-				m.EndPoint = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					m.EndPoint = repl.ReplaceAll(d.Val(), "")
+				}
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "zone_id":
-				m.ZoneId = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					m.ZoneId = repl.ReplaceAll(d.Val(), "")
+				}
 				if d.NextArg() {
 					return d.ArgErr()
 				}
