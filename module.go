@@ -2,11 +2,12 @@ package huaweidns
 
 import (
 	"github.com/caddyserver/caddy/v2"
+	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/dns/v2/model"
 )
 
 var (
-// _ caddyfile.Unmarshaler = (*Module)(nil)
+	_ caddyfile.Unmarshaler = (*Module)(nil)
 )
 
 func init() {
@@ -46,9 +47,11 @@ func (m *Module) Validate() error {
 //	    app_id <app_id>
 //	    app_token <app_token>
 //	}
-/*func (m *Module) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+func (m *Module) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	repl := caddy.NewReplacer()
+
 	for d.Next() {
+		/*插件名后面的参数
 		if d.NextArg() {
 			m.AccessKey = repl.ReplaceAll(d.Val(), "")
 		}
@@ -66,45 +69,30 @@ func (m *Module) Validate() error {
 		}
 		if d.NextArg() {
 			return d.ArgErr()
-		}
+		}*/
 		for nesting := d.Nesting(); d.NextBlock(nesting); {
 			switch d.Val() {
 			case "access_key":
-				if m.AccessKey != "" {
-					return d.Err("Access Key already set")
-				}
 				m.AccessKey = repl.ReplaceAll(d.Val(), "")
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "secret_access_key":
-				if m.SecretAccessKey != "" {
-					return d.Err("Secret Access Key already set")
-				}
 				m.SecretAccessKey = repl.ReplaceAll(d.Val(), "")
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "region_id":
-				if m.RegionID != "" {
-					return d.Err("RegionID already set")
-				}
 				m.RegionID = repl.ReplaceAll(d.Val(), "")
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "end_point":
-				if m.EndPoint != "" {
-					return d.Err("EndPoint already set")
-				}
 				m.EndPoint = repl.ReplaceAll(d.Val(), "")
 				if d.NextArg() {
 					return d.ArgErr()
 				}
 			case "zone_id":
-				if m.ZoneId != "" {
-					return d.Err("ZoneId already set")
-				}
 				m.ZoneId = repl.ReplaceAll(d.Val(), "")
 				if d.NextArg() {
 					return d.ArgErr()
@@ -118,4 +106,4 @@ func (m *Module) Validate() error {
 		return d.Err("missing Access Key or Secret Access Key")
 	}
 	return nil
-}*/
+}
