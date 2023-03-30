@@ -35,7 +35,8 @@ func (m *Module) CaddyModule() caddy.ModuleInfo {
 
 func (m *Module) Provision(ctx caddy.Context) error {
 	m.logger = ctx.Logger().Sugar()
-	m.logger.Infof("AccessKey:%s, SecretAccessKey:%s, RegionID:%s, EndPoint:%s, ZoneId:%s")
+	m.logger.Infof("AccessKey:%s, SecretAccessKey:%s, RegionID:%s, EndPoint:%s, ZoneId:%s",
+		m.AccessKey, m.SecretAccessKey, m.RegionID, m.EndPoint, m.ZoneId)
 	m.initClient()
 	return nil
 }
