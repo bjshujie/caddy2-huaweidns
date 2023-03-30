@@ -4,6 +4,7 @@ import (
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/dns/v2/model"
+	"go.uber.org/zap"
 )
 
 var (
@@ -17,6 +18,7 @@ func init() {
 // Module wraps dnspodcn.Provider.
 type Module struct {
 	*Provider
+	logger *zap.SugaredLogger
 }
 
 // CaddyModule returns the Caddy module information.
@@ -32,12 +34,17 @@ func (m *Module) CaddyModule() caddy.ModuleInfo {
 }
 
 func (m *Module) Provision(ctx caddy.Context) error {
+	m.logger = ctx.Logger().Sugar()
+	m.logger.Infof("AccessKey:%s, SecretAccessKey:%s, RegionID:%s, EndPoint:%s, ZoneId:%s")
 	m.initClient()
 	return nil
 }
 
 func (m *Module) Validate() error {
 	_, err := m.dnsClient.ListApiVersions(&model.ListApiVersionsRequest{})
+	if err != nil {
+		m.logger.Infof("huawei dns privider validate failed:%v", err)
+	}
 	return err
 }
 
