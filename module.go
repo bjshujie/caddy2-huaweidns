@@ -1,0 +1,121 @@
+package huaweidns
+
+import (
+	"github.com/caddyserver/caddy/v2"
+	"github.com/huaweicloud/huaweicloud-sdk-go-v3/services/dns/v2/model"
+)
+
+var (
+// _ caddyfile.Unmarshaler = (*Module)(nil)
+)
+
+func init() {
+	caddy.RegisterModule(&Module{})
+}
+
+// Module wraps dnspodcn.Provider.
+type Module struct {
+	*Provider
+}
+
+// CaddyModule returns the Caddy module information.
+func (m *Module) CaddyModule() caddy.ModuleInfo {
+	return caddy.ModuleInfo{
+		ID: "dns.providers.huaweidns",
+		New: func() caddy.Module {
+			return &Module{
+				Provider: &Provider{},
+			}
+		},
+	}
+}
+
+func (m *Module) Provision(ctx caddy.Context) error {
+	m.initClient()
+	return nil
+}
+
+func (m *Module) Validate() error {
+	_, err := m.dnsClient.ListApiVersions(&model.ListApiVersionsRequest{})
+	return err
+}
+
+// UnmarshalCaddyfile sets up the DNS provider from Caddyfile tokens. Syntax:
+//
+//	dnspodcn [<app_id> <app_token>] {
+//	    app_id <app_id>
+//	    app_token <app_token>
+//	}
+/*func (m *Module) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+	repl := caddy.NewReplacer()
+	for d.Next() {
+		if d.NextArg() {
+			m.AccessKey = repl.ReplaceAll(d.Val(), "")
+		}
+		if d.NextArg() {
+			m.SecretAccessKey = repl.ReplaceAll(d.Val(), "")
+		}
+		if d.NextArg() {
+			m.RegionID = repl.ReplaceAll(d.Val(), "")
+		}
+		if d.NextArg() {
+			m.EndPoint = repl.ReplaceAll(d.Val(), "")
+		}
+		if d.NextArg() {
+			m.ZoneId = repl.ReplaceAll(d.Val(), "")
+		}
+		if d.NextArg() {
+			return d.ArgErr()
+		}
+		for nesting := d.Nesting(); d.NextBlock(nesting); {
+			switch d.Val() {
+			case "access_key":
+				if m.AccessKey != "" {
+					return d.Err("Access Key already set")
+				}
+				m.AccessKey = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+			case "secret_access_key":
+				if m.SecretAccessKey != "" {
+					return d.Err("Secret Access Key already set")
+				}
+				m.SecretAccessKey = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+			case "region_id":
+				if m.RegionID != "" {
+					return d.Err("RegionID already set")
+				}
+				m.RegionID = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+			case "end_point":
+				if m.EndPoint != "" {
+					return d.Err("EndPoint already set")
+				}
+				m.EndPoint = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+			case "zone_id":
+				if m.ZoneId != "" {
+					return d.Err("ZoneId already set")
+				}
+				m.ZoneId = repl.ReplaceAll(d.Val(), "")
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+			default:
+				return d.Errf("unrecognized subdirective '%s'", d.Val())
+			}
+		}
+	}
+	if m.AccessKey == "" || m.SecretAccessKey == "" {
+		return d.Err("missing Access Key or Secret Access Key")
+	}
+	return nil
+}*/
